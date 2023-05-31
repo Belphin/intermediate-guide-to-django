@@ -8,6 +8,10 @@
 
   - `docker compose build`
 
+- ### Run docker
+
+  - `docker compose up`
+
 ### Set up front-end
 
 - ### Install node modules
@@ -30,10 +34,6 @@
 - ### Django shell
 
   - `docker compose run server python manage.py shell`
-
-- ### Run docker
-
-  - `docker compose up`
 
 - ### Run tests
 
