@@ -1,16 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 
-class Account(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+from .managers import UserManager, UserManagerAll
 
-	READER = 0
-	BLOGGER = 1
+from .constants import UserRoleChoice
 
-	ROLE_TYPE = (
-		(READER, "Reader"),
-		(BLOGGER, "Blogger"),
-	)
 
-	role = models.PositiveSmallIntegerField(choices=ROLE_TYPE)
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_("email address"), unique=True)
+    username = models.CharField(_("username"), max_length=30, blank=True)
+    first_name = models.CharField(_("first name"), max_length=30, blank=True)
+    last_name = models.CharField(_("last name"), max_length=30, blank=True)
+    is_staff = models.BooleanField(_("staff"), default=True)
+    role = models.PositiveSmallIntegerField(choices=UserRoleChoice.choices)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    objects = UserManager()
+
+    objects_all = UserManagerAll()
+
+    class Meta:
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
